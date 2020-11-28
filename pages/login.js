@@ -21,6 +21,7 @@ const Login = () => {
         })
       );
     magic?.preload();
+    console.log(process.env);
   }, [magic]);
 
   async function handleLoginWithMagic(e) {
