@@ -18,7 +18,6 @@ const Form = ({ errorMessage, onSubmit }) => {
             type="email"
             name="email"
             placeholder="Email"
-            defaultValue="hunter@magic.link"
             required
             style={{
               backgroundImage: `url(${mailURL})`,

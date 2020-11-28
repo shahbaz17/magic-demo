@@ -52,11 +52,8 @@ const Header = () => {
           margin-left: auto;
         }
         a {
-          color: #ccc;
-          text-decoration: none;
-        }
-        a:hover {
           color: #fff;
+          text-decoration: none;
         }
         header {
           color: #ccc;
