@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import { useUser } from '../lib/hooks'
+import Link from "next/link";
+import { useUser } from "../lib/hooks";
 
 const Header = () => {
-  const user = useUser()
+  const user = useUser();
 
   return (
     <header>
@@ -52,16 +52,19 @@ const Header = () => {
           margin-left: auto;
         }
         a {
-          color: #fff;
+          color: #ccc;
           text-decoration: none;
         }
-        header {
+        a:hover {
           color: #fff;
+        }
+        header {
+          color: #ccc;
           background-color: #333;
         }
       `}</style>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

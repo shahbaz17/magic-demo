@@ -1,12 +1,12 @@
-import Webauthn from "../components/webauthn";
+// import Webauthn from "../components/webauthn";
 
 const Form = ({ errorMessage, onSubmit }) => {
   const mailURL =
     "https://www.pinclipart.com/picdir/big/52-525907_white-email-symbol-transparent-clipart-email-address-mail.png";
 
-  const handleLoginWithWebauthn = async () => {
-    console.log("webauthn");
-  };
+  // const handleLoginWithWebauthn = async () => {
+  //   console.log("webauthn");
+  // };
 
   return (
     <>
@@ -24,8 +24,8 @@ const Form = ({ errorMessage, onSubmit }) => {
               backgroundImage: `url(${mailURL})`,
               backgroundSize: "18px",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "3% 50%",
-              paddingLeft: "35px",
+              backgroundPosition: "5% 50%",
+              paddingLeft: "43px",
             }}
           />
         </label>
@@ -37,13 +37,13 @@ const Form = ({ errorMessage, onSubmit }) => {
               backgroundImage: "url(airplane.png)",
               backgroundSize: "21px",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "20% 50%",
+              backgroundPosition: "28% 50%",
               paddingLeft: "35px",
             }}
           >
             Send Magic Link
           </button>
-          <Webauthn onSubmit={handleLoginWithWebauthn} />
+          {/* <Webauthn onSubmit={handleLoginWithWebauthn} /> */}
         </div>
 
         {errorMessage && <p className="error">{errorMessage}</p>}
@@ -57,10 +57,15 @@ const Form = ({ errorMessage, onSubmit }) => {
           text-align: center;
         }
         input {
-          padding: 8px;
+          padding: 10px;
           margin: 0.3rem 0 1rem;
           border: 1px solid #ccc;
-          border-radius: 4px;
+          border-radius: 50px;
+          outline: none;
+          transition: 0.5s;
+        }
+        input:focus {
+          border: 1px solid #888;
         }
         .submit {
           display: flex;
@@ -72,12 +77,14 @@ const Form = ({ errorMessage, onSubmit }) => {
           text-decoration: none;
         }
         .submit > button {
-          padding: 0.5rem 1rem;
+          padding: 0.6rem 1rem;
           cursor: pointer;
           background: #fff;
           border: 1px solid #ccc;
-          border-radius: 4px;
-          width: 65%;
+          border-radius: 50px;
+          width: 100%;
+          outline: none;
+          transition: 0.3s;
         }
         .submit > button:hover {
           border-color: #888;

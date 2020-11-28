@@ -67,13 +67,12 @@ const Login = () => {
     <Layout>
       <div className="login">
         <Form errorMessage={errorMsg} onSubmit={handleLoginWithMagic} />
-
         <div className="or-login-with">Or login with</div>
         <SocialLogins onSubmit={handleLoginWithSocial} />
       </div>
       <style jsx>{`
         .login {
-          max-width: 24rem;
+          max-width: 21rem;
           margin: 0 auto;
           padding: 1rem;
           border: 1px solid #ccc;

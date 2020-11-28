@@ -38,8 +38,12 @@ const Callback = () => {
 
       res.status === 200 && Router.push("/");
     } catch (error) {
+      if (error === "TypeError: Cannot read property 'verifer' of null") {
+        alert("cannot read proprty 'verifier' of null - attempting to retry");
+        finishSocialLogin();
+      }
       console.error("An unexpected error happened occurred:", error);
-      setErrorMsg(error.message);
+      setErrorMsg("Error logging in. Please try again.");
     }
   };
 
@@ -52,7 +56,7 @@ const Callback = () => {
         res.status === 200 && Router.push("/");
       } catch (error) {
         console.error("An unexpected error happened occurred:", error);
-        setErrorMsg(error.message);
+        setErrorMsg("Error logging in. Please try again.");
       }
     }
   };
@@ -70,8 +74,7 @@ const Callback = () => {
 
   return (
     <Layout>
-      <div>Finishing authentication...</div>
-      {errorMsg && <div className="error">Error: {errorMsg}</div>}
+      {!errorMsg ? <div>Authenticating...</div> : <div className="error">{errorMsg}</div>}
       <style jsx>{`
         .login {
           max-width: 21rem;

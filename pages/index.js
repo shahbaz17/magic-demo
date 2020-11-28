@@ -10,18 +10,11 @@ const Home = () => {
 
       {user ? (
         <>
-          <p>Currently logged in as:</p>
-          <pre>{JSON.stringify(user, null, 2)}</pre>
+          <p>Currently logged in as: {user.email}</p>
         </>
       ) : (
         <div>Log in to continue</div>
       )}
-
-      <style jsx>{`
-        li {
-          margin-bottom: 0.5rem;
-        }
-      `}</style>
     </Layout>
   );
 };
