@@ -1,53 +1,71 @@
-import { useState } from 'react'
-import Router from 'next/router'
-import { useUser } from '../lib/hooks'
-import Layout from '../components/layout'
-import Form from '../components/form'
-
-import { Magic } from 'magic-sdk'
+import { useState, useEffect } from "react";
+import Router from "next/router";
+import { useUser } from "../lib/hooks";
+import Layout from "../components/layout";
+import Form from "../components/form";
+import SocialLogins from "../components/social-logins";
+import { Magic } from "magic-sdk";
+import { OAuthExtension } from "@magic-ext/oauth";
 
 const Login = () => {
-  useUser({ redirectTo: '/', redirectIfFound: true })
+  useUser({ redirectTo: "/", redirectIfFound: true });
+  const [magic, setMagic] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [errorMsg, setErrorMsg] = useState('')
+  useEffect(() => {
+    !magic &&
+      setMagic(
+        new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY, {
+          extensions: [new OAuthExtension()],
+        })
+      );
+    magic?.preload();
+  }, [magic]);
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function handleLoginWithMagic(e) {
+    e.preventDefault();
 
-    if (errorMsg) setErrorMsg('')
+    if (errorMsg) setErrorMsg("");
 
     const body = {
       email: e.currentTarget.email.value,
-    }
+    };
 
     try {
-      const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY)
       const didToken = await magic.auth.loginWithMagicLink({
         email: body.email,
-      })
-      const res = await fetch('/api/login', {
-        method: 'POST',
+      });
+      const res = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + didToken,
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + didToken,
         },
         body: JSON.stringify(body),
-      })
+      });
       if (res.status === 200) {
-        Router.push('/')
+        Router.push("/");
       } else {
-        throw new Error(await res.text())
+        throw new Error(await res.text());
       }
     } catch (error) {
-      console.error('An unexpected error happened occurred:', error)
-      setErrorMsg(error.message)
+      console.error("An unexpected error happened occurred:", error);
+      setErrorMsg(error.message);
     }
+  }
+
+  async function handleLoginWithSocial(provider) {
+    await magic.oauth.loginWithRedirect({
+      provider,
+      redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/callback`,
+    });
   }
 
   return (
     <Layout>
       <div className="login">
-        <Form errorMessage={errorMsg} onSubmit={handleSubmit} />
+        <Form errorMessage={errorMsg} onSubmit={handleLoginWithMagic} />
+        <SocialLogins onSubmit={handleLoginWithSocial} />
       </div>
       <style jsx>{`
         .login {
@@ -59,7 +77,7 @@ const Login = () => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

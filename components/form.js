@@ -1,24 +1,41 @@
+const mailURL =
+  "https://www.pinclipart.com/picdir/big/52-525907_white-email-symbol-transparent-clipart-email-address-mail.png";
+
 const Form = ({ errorMessage, onSubmit }) => (
-  <form onSubmit={onSubmit}>
-    <label>
-      <span>Email</span>
-      <input type="email" name="email" required />
-    </label>
+  <>
+    {/* Magic link login form */}
+    <form onSubmit={onSubmit}>
+      <h3>Login</h3>
+      <label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          style={{
+            backgroundImage: `url(${mailURL})`,
+            backgroundSize: "18px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "2% 50%",
+            paddingLeft: "35px",
+          }}
+        />
+      </label>
 
-    <div className="submit">
-      <button type="submit">Sign Up / Login</button>
-    </div>
+      <div className="submit">
+        <button type="submit">Send Magic Link</button>
+      </div>
 
-    {errorMessage && <p className="error">{errorMessage}</p>}
-
+      {errorMessage && <p className="error">{errorMessage}</p>}
+    </form>
+    <div className="or-login-with">Or login with</div>
+    {/* Social Login Form */}
     <style jsx>{`
       form,
       label {
         display: flex;
         flex-flow: column;
-      }
-      label > span {
-        font-weight: 600;
+        text-align: center;
       }
       input {
         padding: 8px;
@@ -41,6 +58,7 @@ const Form = ({ errorMessage, onSubmit }) => (
         background: #fff;
         border: 1px solid #ccc;
         border-radius: 4px;
+        width: 100%;
       }
       .submit > button:hover {
         border-color: #888;
@@ -49,8 +67,15 @@ const Form = ({ errorMessage, onSubmit }) => (
         color: brown;
         margin: 1rem 0 0;
       }
+      .or-login-with {
+        margin-top: 25px;
+        margin-bottom: 30px;
+        font-size: 12px;
+        color: gray;
+        text-align: center;
+      }
     `}</style>
-  </form>
-)
+  </>
+);
 
-export default Form
+export default Form;
