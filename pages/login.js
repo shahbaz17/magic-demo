@@ -6,6 +6,7 @@ import Form from "../components/form";
 import SocialLogins from "../components/social-logins";
 import { Magic } from "magic-sdk";
 import { OAuthExtension } from "@magic-ext/oauth";
+import { WebAuthnExtension } from "@magic-ext/webauthn";
 
 const Login = () => {
   useUser({ redirectTo: "/", redirectIfFound: true });
@@ -16,7 +17,7 @@ const Login = () => {
     !magic &&
       setMagic(
         new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY, {
-          extensions: [new OAuthExtension()],
+          extensions: [new OAuthExtension(), new WebAuthnExtension()],
         })
       );
     magic?.preload();
@@ -34,6 +35,7 @@ const Login = () => {
     try {
       const didToken = await magic.auth.loginWithMagicLink({
         email: body.email,
+        redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/callback`,
       });
       const res = await fetch("/api/login", {
         method: "POST",
@@ -65,15 +67,25 @@ const Login = () => {
     <Layout>
       <div className="login">
         <Form errorMessage={errorMsg} onSubmit={handleLoginWithMagic} />
+
+        <div className="or-login-with">Or login with</div>
         <SocialLogins onSubmit={handleLoginWithSocial} />
       </div>
       <style jsx>{`
         .login {
-          max-width: 21rem;
+          max-width: 24rem;
           margin: 0 auto;
           padding: 1rem;
           border: 1px solid #ccc;
           border-radius: 4px;
+          text-align: center;
+        }
+        .or-login-with {
+          margin-top: 25px;
+          margin-bottom: 30px;
+          font-size: 12px;
+          color: gray;
+          text-align: center;
         }
       `}</style>
     </Layout>

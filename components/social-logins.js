@@ -3,33 +3,27 @@ const SocialLogins = ({ onSubmit }) => {
 
   return (
     <>
-      <div className="social-btn-container">
-        {providers.map((provider) => {
-          return (
-            <button
-              type="submit"
-              className="social-btn"
-              onClick={() => onSubmit(provider)}
-              src={`/${provider}.png`}
-              key={provider}
-              style={{
-                backgroundImage: `url(${provider}.png)`,
-                backgroundSize: "18px",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "23% 50%",
-                paddingLeft: "35px",
-              }}
-            >
-              {provider}
-            </button>
-          );
-        })}
-      </div>
-      <style jsx>{`
-        .social-btn-container {
-          text-align: center;
-        }
+      {providers.map((provider) => {
+        return (
+          <button
+            type="submit"
+            className="social-btn"
+            onClick={() => onSubmit(provider)}
+            key={provider}
+            style={{
+              backgroundImage: `url(${provider}.png)`,
+              backgroundSize: "19px",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "23% 50%",
+              paddingLeft: "35px",
+            }}
+          >
+            {provider}
+          </button>
+        );
+      })}
 
+      <style jsx>{`
         .social-btn {
           border-radius: 4px;
           padding: 8px 10px;

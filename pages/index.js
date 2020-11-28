@@ -8,11 +8,13 @@ const Home = () => {
     <Layout>
       <h1>Home</h1>
 
-      {user && (
+      {user ? (
         <>
           <p>Currently logged in as:</p>
           <pre>{JSON.stringify(user, null, 2)}</pre>
         </>
+      ) : (
+        <div>Log in to continue</div>
       )}
 
       <style jsx>{`
