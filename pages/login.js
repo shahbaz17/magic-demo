@@ -78,6 +78,7 @@ const Login = () => {
           border: 1px solid #ccc;
           border-radius: 4px;
           text-align: center;
+          margin-top: 40px;
         }
         .or-login-with {
           margin-top: 25px;
