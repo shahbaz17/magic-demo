@@ -15,7 +15,7 @@ const Layout = (props) => (
     </main>
 
     <style jsx global>{`
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200&family=Roboto:wght@100&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap");
       *,
       *::before,
       *::after {
