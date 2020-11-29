@@ -39,6 +39,7 @@ const SocialLogins = ({ onSubmit }) => {
           cursor: pointer;
           outline: none;
           transition: 0.3s;
+          background-color: #fff;
         }
 
         .social-btn:hover {

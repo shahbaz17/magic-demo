@@ -1,16 +1,9 @@
-// import Webauthn from "../components/webauthn";
-
 const Form = ({ errorMessage, onSubmit }) => {
   const mailURL =
     "https://www.pinclipart.com/picdir/big/52-525907_white-email-symbol-transparent-clipart-email-address-mail.png";
 
-  // const handleLoginWithWebauthn = async () => {
-  //   console.log("webauthn");
-  // };
-
   return (
     <>
-      {/* Magic link login form */}
       <form onSubmit={onSubmit}>
         <h3>Login</h3>
         <label>
@@ -36,18 +29,16 @@ const Form = ({ errorMessage, onSubmit }) => {
               backgroundImage: "url(airplane.png)",
               backgroundSize: "21px",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "28% 50%",
+              backgroundPosition: "23% 50%",
               paddingLeft: "35px",
             }}
           >
             Send Magic Link
           </button>
-          {/* <Webauthn onSubmit={handleLoginWithWebauthn} /> */}
         </div>
 
         {errorMessage && <p className="error">{errorMessage}</p>}
       </form>
-      {/* Social Login Form */}
       <style jsx>{`
         form,
         label {
@@ -57,11 +48,12 @@ const Form = ({ errorMessage, onSubmit }) => {
         }
         input {
           padding: 10px;
-          margin: 0.3rem 0 1rem;
+          margin: 1rem auto;
           border: 1px solid #ccc;
           border-radius: 50px;
           outline: none;
           transition: 0.5s;
+          width: 80%;
         }
         input:focus {
           border: 1px solid #888;
@@ -81,9 +73,11 @@ const Form = ({ errorMessage, onSubmit }) => {
           background: #fff;
           border: 1px solid #ccc;
           border-radius: 50px;
-          width: 100%;
+          width: 80%;
           outline: none;
           transition: 0.3s;
+          margin: 0 auto;
+          font-size: 13px;
         }
         .submit > button:hover {
           border-color: #888;

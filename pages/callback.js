@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
-import { useUser } from "../lib/hooks";
 import Layout from "../components/layout";
 import { Magic } from "magic-sdk";
 import { OAuthExtension } from "@magic-ext/oauth";
 
 const Callback = () => {
-  useUser({ redirectTo: "/", redirectIfFound: true });
   const [magic, setMagic] = useState(null);
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState("");
+  const [showNextStep, setShowNextStep] = useState(false);
 
   useEffect(() => {
     !magic &&
@@ -32,17 +31,12 @@ const Callback = () => {
           userMetadata: { email },
         },
       } = await magic.oauth.getRedirectResult();
-      // console.log(await magic.oauth.getRedirectResult());
+      setShowNextStep(true);
       // send didToken and email to server to finish authentication
       const res = await authenticateWithServer(idToken, email);
-
       res.status === 200 && Router.push("/");
     } catch (error) {
-      if (error === "TypeError: Cannot read property 'verifer' of null") {
-        alert("cannot read proprty 'verifier' of null - attempting to retry");
-        finishSocialLogin();
-      }
-      console.error("An unexpected error happened occurred:", error);
+      console.error(error);
       setErrorMsg("Error logging in. Please try again.");
     }
   };
@@ -51,6 +45,7 @@ const Callback = () => {
     if (router.query.magic_credential) {
       try {
         let didToken = await magic.auth.loginWithCredential();
+        setShowNextStep(true);
         let { email } = await magic.user.getMetadata();
         let res = await authenticateWithServer(didToken, email);
         res.status === 200 && Router.push("/");
@@ -74,7 +69,15 @@ const Callback = () => {
 
   return (
     <Layout>
-      {!errorMsg ? <div>Authenticating...</div> : <div className="error">{errorMsg}</div>}
+      {!errorMsg ? (
+        <div className="callback-container">
+          <div style={{ margin: "25px 0" }}>Retrieving auth token...</div>
+          {showNextStep && <div style={{ margin: "25px 0" }}>Validating token...</div>}
+        </div>
+      ) : (
+        <div className="error">{errorMsg}</div>
+      )}
+
       <style jsx>{`
         .login {
           max-width: 21rem;
@@ -85,6 +88,10 @@ const Callback = () => {
         }
         .error {
           color: red;
+        }
+        .callback-container {
+          width: 100%;
+          text-align: center;
         }
       `}</style>
     </Layout>
