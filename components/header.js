@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { useUser } from "../lib/hooks";
+import { useUser, devMode } from "../lib/hooks";
 import ReactTooltip from "react-tooltip";
 
 const Header = () => {
   const user = useUser();
+  const checked = devMode();
+
+  const handleToggle = () => {
+    let c = localStorage.getItem("devMode");
+    localStorage.setItem("devMode", c === "true" ? false : true);
+  };
 
   return (
     <header>
@@ -12,7 +18,11 @@ const Header = () => {
           <div data-tip="Toggle this to enable Developer Mode, <br /> which will show you Magic code snippets <br /> that power each action.">
             DEVELOPERS
             <label className="switch">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                defaultChecked={checked === "true" ? true : false}
+                onClick={() => handleToggle()}
+              />
               <span className="slider round"></span>
             </label>
           </div>

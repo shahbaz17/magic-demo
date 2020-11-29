@@ -14,6 +14,9 @@ const Layout = (props) => (
       <div className="container">{props.children}</div>
     </main>
 
+    <footer>
+      Powered by <img src="/magic.png" alt="Magic Logo" className="footer-img" />
+    </footer>
     <style jsx global>{`
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap");
       *,
@@ -40,7 +43,13 @@ const Layout = (props) => (
         border-top: 1px solid #eaeaea;
         display: flex;
         justify-content: center;
+        bottom: 0px;
+        position: absolute;
         align-items: center;
+      }
+      .footer-img {
+        height: 32px;
+        margin-left: 10px;
       }
     `}</style>
   </>
