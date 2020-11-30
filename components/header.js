@@ -41,23 +41,27 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  {devModeEnabled === "true" ? (
-                    <a href="/api/logout" data-tip data-for="logout-btn">
-                      Logout
-                    </a>
-                  ) : (
-                    <a href="/api/logout">Logout</a>
+                  <a href="/api/logout">Logout</a>
+                  {devModeEnabled === "true" && (
+                    <>
+                      <img
+                        height="14px"
+                        data-tip
+                        data-for="logout-btn"
+                        src="/information.png"
+                        style={{ marginLeft: "8px" }}
+                      />
+                      <ReactTooltip id="logout-btn" type="dark" effect="solid" place="bottom">
+                        <div>Action: Log user out</div>
+                        <br />
+                        <div>Client-side:</div>
+                        <div>GET /api/logout</div>
+                        <br />
+                        <div>Server-side:</div>
+                        <div>await magic.users.logoutByIssuer(session.issuer);</div>
+                      </ReactTooltip>
+                    </>
                   )}
-                  <ReactTooltip id="logout-btn" type="dark" effect="solid" place="bottom">
-                    <p>Client-side</p>
-                    <pre>
-                      <code>GET /api/logout</code>
-                    </pre>
-                    <p>Server-side</p>
-                    <pre>
-                      <code>await magic.users.logoutByIssuer(session.issuer);</code>
-                    </pre>
-                  </ReactTooltip>
                 </li>
               </>
             ) : (

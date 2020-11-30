@@ -3,12 +3,15 @@ import Router, { useRouter } from "next/router";
 import Layout from "../components/layout";
 import { Magic } from "magic-sdk";
 import { OAuthExtension } from "@magic-ext/oauth";
+import { devMode } from "../lib/hooks";
+import ReactTooltip from "react-tooltip";
 
 const Callback = () => {
   const [magic, setMagic] = useState(null);
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState("");
   const [showNextStep, setShowNextStep] = useState(false);
+  const devModeEnabled = devMode();
 
   useEffect(() => {
     !magic &&
@@ -34,7 +37,9 @@ const Callback = () => {
       setShowNextStep(true);
       // send didToken and email to server to finish authentication
       const res = await authenticateWithServer(idToken, email);
-      res.status === 200 && Router.push("/");
+      {
+        devModeEnabled === "false" && res.status === 200 && Router.push("/");
+      }
     } catch (error) {
       console.error(error);
       setErrorMsg("Error logging in. Please try again.");
@@ -48,7 +53,9 @@ const Callback = () => {
         setShowNextStep(true);
         let { email } = await magic.user.getMetadata();
         let res = await authenticateWithServer(didToken, email);
-        res.status === 200 && Router.push("/");
+        {
+          devModeEnabled === "false" && res.status === 200 && Router.push("/");
+        }
       } catch (error) {
         console.error("An unexpected error happened occurred:", error);
         setErrorMsg("Error logging in. Please try again.");
@@ -71,8 +78,56 @@ const Callback = () => {
     <Layout>
       {!errorMsg ? (
         <div className="callback-container">
-          <div style={{ margin: "25px 0" }}>Retrieving auth token...</div>
-          {showNextStep && <div style={{ margin: "25px 0" }}>Validating token...</div>}
+          <div style={{ margin: "25px 0" }}>
+            Retrieving auth token...
+            {devModeEnabled === "true" && (
+              <>
+                <img
+                  height="14px"
+                  data-tip
+                  data-for="retrieving-auth-token"
+                  src="/information.png"
+                  style={{ marginLeft: "10px" }}
+                />
+                <ReactTooltip id="retrieving-auth-token" type="dark" effect="solid" place="bottom">
+                  <div>Action: Grab didToken from query params</div>
+                  <br />
+                  <div>let didToken = await magic.auth.loginWithCredential();</div>
+                </ReactTooltip>
+              </>
+            )}
+          </div>
+          {showNextStep && (
+            <div style={{ margin: "25px 0" }}>
+              Validating token...
+              {devModeEnabled === "true" && (
+                <>
+                  <img
+                    height="14px"
+                    data-tip
+                    data-for="validating-token"
+                    src="/information.png"
+                    style={{ marginLeft: "10px" }}
+                  />
+                  <ReactTooltip id="validating-token" type="dark" effect="solid" place="bottom">
+                    <div>Action: Send didToken to server to validate</div>
+                    <br />
+                    <div>Client-side</div>
+                    <div>let res = await authenticateWithServer(didToken, email);</div>
+                    <br />
+                    <div>Server-side</div>
+                    <div>const didToken = req.headers.authorization.substr(7);</div>
+                    <div>await magic.token.validate(didToken);</div>
+                  </ReactTooltip>
+                </>
+              )}
+              {devModeEnabled === "true" && (
+                <div style={{ marginTop: "25px" }}>
+                  You're logged in! Click <a href="/">here</a> to go home.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="error">{errorMsg}</div>

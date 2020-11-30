@@ -1,6 +1,14 @@
+import { devMode } from "../lib/hooks";
+import ReactTooltip from "react-tooltip";
+
 const Form = ({ errorMessage, onSubmit }) => {
+  const devModeEnabled = devMode();
+
   const mailURL =
     "https://www.pinclipart.com/picdir/big/52-525907_white-email-symbol-transparent-clipart-email-address-mail.png";
+
+  const loginWithMagicToolTip =
+    "const didToken = await magic.auth.loginWithMagicLink({ email, redirectURI });";
 
   return (
     <>
@@ -29,11 +37,27 @@ const Form = ({ errorMessage, onSubmit }) => {
               backgroundImage: "url(airplane.png)",
               backgroundSize: "21px",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "23% 50%",
+              backgroundPosition: "18% 50%",
               paddingLeft: "35px",
             }}
           >
             Send Magic Link
+            {devModeEnabled === "true" && (
+              <>
+                <img
+                  height="14px"
+                  data-tip
+                  data-for="magic-link-btn"
+                  src="/information.png"
+                  style={{ marginLeft: "10px" }}
+                />
+                <ReactTooltip id="magic-link-btn" type="dark" effect="solid" place="bottom">
+                  <div>Action: Send magic link to user</div>
+                  <br />
+                  <div>{loginWithMagicToolTip}</div>
+                </ReactTooltip>
+              </>
+            )}
           </button>
         </div>
 

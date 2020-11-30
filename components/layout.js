@@ -39,7 +39,7 @@ const Layout = (props) => (
       }
       footer {
         width: 100%;
-        height: 100px;
+        height: 80px;
         border-top: 1px solid #eaeaea;
         display: flex;
         justify-content: center;
