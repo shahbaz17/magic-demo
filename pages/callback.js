@@ -51,8 +51,8 @@ const Callback = () => {
       try {
         let didToken = await magic.auth.loginWithCredential();
         setShowNextStep(true);
-        let { email } = await magic.user.getMetadata();
-        let res = await authenticateWithServer(didToken, email);
+        // let { email } = await magic.user.getMetadata();
+        let res = await authenticateWithServer(didToken);
         {
           devModeEnabled === "false" && res.status === 200 && Router.push("/");
         }
@@ -70,7 +70,6 @@ const Callback = () => {
         "Content-Type": "application/json",
         Authorization: "Bearer " + didToken,
       },
-      body: JSON.stringify(email),
     });
   };
 
@@ -81,7 +80,7 @@ const Callback = () => {
           <div style={{ margin: "25px 0" }}>
             Retrieving auth token...
             {devModeEnabled === "true" && (
-              <>
+              <span style={{ textAlign: "left" }}>
                 <img
                   height="14px"
                   data-tip
@@ -90,18 +89,18 @@ const Callback = () => {
                   style={{ marginLeft: "10px" }}
                 />
                 <ReactTooltip id="retrieving-auth-token" type="dark" effect="solid" place="bottom">
-                  <div>Action: Grab didToken from query params</div>
+                  <div>Action: Grab `didToken` from query params</div>
                   <br />
                   <div>let didToken = await magic.auth.loginWithCredential();</div>
                 </ReactTooltip>
-              </>
+              </span>
             )}
           </div>
           {showNextStep && (
             <div style={{ margin: "25px 0" }}>
               Validating token...
               {devModeEnabled === "true" && (
-                <>
+                <span style={{ textAlign: "left" }}>
                   <img
                     height="14px"
                     data-tip
@@ -109,17 +108,25 @@ const Callback = () => {
                     src="/information.png"
                     style={{ marginLeft: "10px" }}
                   />
-                  <ReactTooltip id="validating-token" type="dark" effect="solid" place="bottom">
+                  <ReactTooltip
+                    id="validating-token"
+                    type="dark"
+                    effect="solid"
+                    place="bottom"
+                    style={{ textAlign: "left" }}
+                  >
                     <div>Action: Send didToken to server to validate</div>
                     <br />
-                    <div>Client-side</div>
-                    <div>let res = await authenticateWithServer(didToken, email);</div>
+                    <div>Client-side:</div>
+                    <div>await authenticateWithServer(didToken);</div>
                     <br />
-                    <div>Server-side</div>
-                    <div>const didToken = req.headers.authorization.substr(7);</div>
+                    <div>Server-side:</div>
                     <div>await magic.token.validate(didToken);</div>
+                    <div>const metadata = await magic.users.getMetadataByToken(didToken);</div>
+                    <div>const token = await encryptSession(metadata);</div>
+                    <div>setTokenCookie(res, token);</div>
                   </ReactTooltip>
-                </>
+                </span>
               )}
               {devModeEnabled === "true" && (
                 <div style={{ marginTop: "25px" }}>

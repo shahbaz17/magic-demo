@@ -6,7 +6,7 @@ const SocialLogins = ({ onSubmit }) => {
   const devModeEnabled = devMode();
   const providers = ["google", "facebook", "github"];
   const loginWithSocialToolTip = (provider) =>
-    `await magic.oauth.loginWithRedirect({ provider: ${provider},  redirectURI: {process.env.url}/callback });`;
+    `await magic.oauth.loginWithRedirect({ provider: "${provider}",  redirectURI: "your-website.com/callback" });`;
 
   return (
     <>
@@ -30,7 +30,7 @@ const SocialLogins = ({ onSubmit }) => {
                 {/* turns "google" to "Google" */}
                 {provider.replace(/^\w/, (c) => c.toUpperCase())}
                 {devModeEnabled === "true" && (
-                  <>
+                  <span style={{ textAlign: "left" }}>
                     <img
                       height="14px"
                       data-tip
@@ -48,7 +48,7 @@ const SocialLogins = ({ onSubmit }) => {
                       <br />
                       <div>{loginWithSocialToolTip(provider)}</div>
                     </ReactTooltip>
-                  </>
+                  </span>
                 )}
               </button>
             </>

@@ -5,7 +5,7 @@ import { setTokenCookie } from "../../lib/auth-cookies";
 export default async function login(req, res) {
   try {
     const didToken = req.headers.authorization.substr(7);
-    magic.token.validate(didToken);
+    await magic.token.validate(didToken);
     const metadata = await magic.users.getMetadataByToken(didToken);
     const session = { ...metadata };
     // The token is a string with the encrypted session

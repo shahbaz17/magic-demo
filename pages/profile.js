@@ -25,7 +25,7 @@ const Profile = () => {
                 <ReactTooltip id="user-metadata" type="dark" effect="solid" place="bottom">
                   <div>Action: Grab user metadata</div>
                   <br />
-                  <div>const user = await magic.user.getMetadata()</div>
+                  <div>const user = await magic.user.getMetadata( );</div>
                 </ReactTooltip>
               </>
             )}

@@ -43,7 +43,7 @@ const Form = ({ errorMessage, onSubmit }) => {
           >
             Send Magic Link
             {devModeEnabled === "true" && (
-              <>
+              <span style={{ textAlign: "left" }}>
                 <img
                   height="14px"
                   data-tip
@@ -54,9 +54,16 @@ const Form = ({ errorMessage, onSubmit }) => {
                 <ReactTooltip id="magic-link-btn" type="dark" effect="solid" place="bottom">
                   <div>Action: Send magic link to user</div>
                   <br />
+                  <div>Client-side:</div>
                   <div>{loginWithMagicToolTip}</div>
+                  <div>await authenticateWithServer(didToken);</div> <br />
+                  <div>Server-side:</div>
+                  <div>await magic.token.validate(didToken);</div>
+                  <div>const metadata = await magic.users.getMetadataByToken(didToken);</div>
+                  <div>const token = await encryptSession(metadata);</div>
+                  <div>setTokenCookie(res, token);</div>
                 </ReactTooltip>
-              </>
+              </span>
             )}
           </button>
         </div>
