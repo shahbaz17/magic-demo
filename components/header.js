@@ -4,11 +4,11 @@ import ReactTooltip from "react-tooltip";
 
 const Header = () => {
   const user = useUser();
-  const checked = devMode();
+  const devModeEnabled = devMode();
 
   const handleToggle = () => {
-    let c = localStorage.getItem("devMode");
-    localStorage.setItem("devMode", c === "true" ? false : true);
+    let currentVal = localStorage.getItem("devMode");
+    localStorage.setItem("devMode", currentVal === "true" ? false : true);
   };
 
   return (
@@ -16,11 +16,11 @@ const Header = () => {
       <nav>
         <ul>
           <div data-tip="Toggle this to enable Developer Mode, <br /> which will show you Magic code snippets <br /> that power each action.">
-            DEVELOPERS
+            DEVELOPER
             <label className="switch">
               <input
                 type="checkbox"
-                defaultChecked={checked === "true" ? true : false}
+                defaultChecked={devModeEnabled === "true" ? true : false}
                 onClick={() => handleToggle()}
               />
               <span className="slider round"></span>
@@ -32,6 +32,7 @@ const Header = () => {
                 <a>Home</a>
               </Link>
             </li>
+
             {user ? (
               <>
                 <li>
@@ -40,7 +41,23 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <a href="/api/logout">Logout</a>
+                  {devModeEnabled === "true" ? (
+                    <a href="/api/logout" data-tip data-for="logout-btn">
+                      Logout
+                    </a>
+                  ) : (
+                    <a href="/api/logout">Logout</a>
+                  )}
+                  <ReactTooltip id="logout-btn" type="dark" effect="solid" place="bottom">
+                    <p>Client-side</p>
+                    <pre>
+                      <code>GET /api/logout</code>
+                    </pre>
+                    <p>Server-side</p>
+                    <pre>
+                      <code>await magic.users.logoutByIssuer(session.issuer);</code>
+                    </pre>
+                  </ReactTooltip>
                 </li>
               </>
             ) : (
