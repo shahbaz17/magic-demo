@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
-import Router, { useRouter } from "next/router";
-import Layout from "../components/layout";
-import { Magic } from "magic-sdk";
-import { OAuthExtension } from "@magic-ext/oauth";
-import { devMode } from "../lib/hooks";
-import ReactTooltip from "react-tooltip";
+import { useState, useEffect } from 'react';
+import Router, { useRouter } from 'next/router';
+import Layout from '../components/layout';
+import { Magic } from 'magic-sdk';
+import { OAuthExtension } from '@magic-ext/oauth';
+import { devMode } from '../lib/hooks';
+import ReactTooltip from 'react-tooltip';
+import Link from 'next/link';
 
 const Callback = () => {
   const [magic, setMagic] = useState(null);
   const router = useRouter();
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
   const [showNextStep, setShowNextStep] = useState(false);
+  const [showLinkHome, setShowLinkHome] = useState(false);
   const devModeEnabled = devMode();
 
   useEffect(() => {
@@ -28,21 +30,21 @@ const Callback = () => {
   const finishSocialLogin = async () => {
     try {
       // grab didToken and email from redirectResult using object destructuring
+
       let {
         magic: { idToken },
-        magic: {
-          userMetadata: { email },
-        },
       } = await magic.oauth.getRedirectResult();
+
       setShowNextStep(true);
       // send didToken and email to server to finish authentication
-      const res = await authenticateWithServer(idToken, email);
+      const res = await authenticateWithServer(idToken);
       {
-        devModeEnabled === "false" && res.status === 200 && Router.push("/");
+        devModeEnabled === 'false' && res.status === 200 && Router.push('/');
       }
+      res.status === 200 && setShowLinkHome(true);
     } catch (error) {
       console.error(error);
-      setErrorMsg("Error logging in. Please try again.");
+      setErrorMsg('Error logging in. Please try again.');
     }
   };
 
@@ -51,24 +53,25 @@ const Callback = () => {
       try {
         let didToken = await magic.auth.loginWithCredential();
         setShowNextStep(true);
-        // let { email } = await magic.user.getMetadata();
         let res = await authenticateWithServer(didToken);
         {
-          devModeEnabled === "false" && res.status === 200 && Router.push("/");
+          devModeEnabled === 'false'
+            ? res.status === 200 && Router.push('/')
+            : res.status === 200 && setShowLinkHome(true);
         }
       } catch (error) {
-        console.error("An unexpected error happened occurred:", error);
-        setErrorMsg("Error logging in. Please try again.");
+        console.error('An unexpected error happened occurred:', error);
+        setErrorMsg('Error logging in. Please try again.');
       }
     }
   };
 
-  const authenticateWithServer = async (didToken, email) => {
-    return await fetch("/api/login", {
-      method: "POST",
+  const authenticateWithServer = async (didToken) => {
+    return await fetch('/api/login', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + didToken,
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + didToken,
       },
     });
   };
@@ -76,68 +79,87 @@ const Callback = () => {
   return (
     <Layout>
       {!errorMsg ? (
-        <div className="callback-container">
-          <div style={{ margin: "25px 0" }}>
+        <div className='callback-container'>
+          <div style={{ margin: '25px 0' }}>
             Retrieving auth token...
-            {devModeEnabled === "true" && (
-              <span style={{ textAlign: "left" }}>
+            {devModeEnabled === 'true' && (
+              <span style={{ textAlign: 'left' }}>
                 <img
-                  height="14px"
+                  height='14px'
                   data-tip
-                  data-for="retrieving-auth-token"
-                  src="/information.png"
-                  style={{ marginLeft: "10px" }}
+                  data-for='retrieving-auth-token'
+                  src='/information.png'
+                  style={{ marginLeft: '10px' }}
                 />
-                <ReactTooltip id="retrieving-auth-token" type="dark" effect="solid" place="bottom">
-                  <div>Action: Grab `didToken` from query params</div>
+                <ReactTooltip id='retrieving-auth-token' type='dark' effect='solid' place='bottom'>
+                  <div>
+                    Grab <span className='mono'>`didToken`</span> from query params.
+                  </div>
                   <br />
-                  <div>let didToken = await magic.auth.loginWithCredential();</div>
+                  <div>If handling the redirect from a magic link login</div>
+                  <img
+                    height='20px'
+                    src='/grab-token-from-redirect.png'
+                    style={{ marginBottom: '10px' }}
+                  />
+                  <br />
+                  <div>If handling the redirect from a social login</div>
+                  <img height='27px' src='/grab-token-from-social.png' />
                 </ReactTooltip>
               </span>
             )}
           </div>
           {showNextStep && (
-            <div style={{ margin: "25px 0" }}>
+            <div style={{ margin: '25px 0' }}>
               Validating token...
-              {devModeEnabled === "true" && (
-                <span style={{ textAlign: "left" }}>
+              {devModeEnabled === 'true' && (
+                <span style={{ textAlign: 'left' }}>
                   <img
-                    height="14px"
+                    height='14px'
                     data-tip
-                    data-for="validating-token"
-                    src="/information.png"
-                    style={{ marginLeft: "10px" }}
+                    data-for='validating-token'
+                    src='/information.png'
+                    style={{ marginLeft: '10px' }}
                   />
                   <ReactTooltip
-                    id="validating-token"
-                    type="dark"
-                    effect="solid"
-                    place="bottom"
-                    style={{ textAlign: "left" }}
+                    id='validating-token'
+                    type='dark'
+                    effect='solid'
+                    place='bottom'
+                    style={{ textAlign: 'left' }}
                   >
-                    <div>Action: Send didToken to server to validate</div>
+                    <div>
+                      Validate <span className='mono'>`didToken`</span> with server, completing the
+                      login.
+                    </div>
                     <br />
-                    <div>Client-side:</div>
-                    <div>await authenticateWithServer(didToken);</div>
+                    <div>Client-side</div>
+                    <img
+                      style={{ marginBottom: '8px' }}
+                      height='130px'
+                      src='/finish-login-redirect.png'
+                    />
                     <br />
-                    <div>Server-side:</div>
-                    <div>await magic.token.validate(didToken);</div>
-                    <div>const metadata = await magic.users.getMetadataByToken(didToken);</div>
-                    <div>const token = await encryptSession(metadata);</div>
-                    <div>setTokenCookie(res, token);</div>
+                    <div>Server-side</div>
+                    <img
+                      height='120px'
+                      data-tip
+                      data-for='logout-btn'
+                      src='/api-login-tooltip.png'
+                    />
                   </ReactTooltip>
                 </span>
               )}
-              {devModeEnabled === "true" && (
-                <div style={{ marginTop: "25px" }}>
-                  You're logged in! Click <a href="/">here</a> to go home.
+              {showLinkHome && (
+                <div style={{ marginTop: '25px', color: 'gray' }}>
+                  You're logged in! Click <Link href='/'>here</Link> to go home.
                 </div>
               )}
             </div>
           )}
         </div>
       ) : (
-        <div className="error">{errorMsg}</div>
+        <div className='error'>{errorMsg}</div>
       )}
 
       <style jsx>{`
@@ -154,6 +176,9 @@ const Callback = () => {
         .callback-container {
           width: 100%;
           text-align: center;
+        }
+        .mono {
+          font-family: monospace !important;
         }
       `}</style>
     </Layout>

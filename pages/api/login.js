@@ -1,6 +1,6 @@
-import { magic } from "../../lib/magic";
-import { encryptSession } from "../../lib/iron";
-import { setTokenCookie } from "../../lib/auth-cookies";
+import { magic } from '../../lib/magic';
+import { encryptSession } from '../../lib/iron';
+import { setTokenCookie } from '../../lib/auth-cookies';
 
 export default async function login(req, res) {
   try {
@@ -8,7 +8,6 @@ export default async function login(req, res) {
     await magic.token.validate(didToken);
     const metadata = await magic.users.getMetadataByToken(didToken);
     const session = { ...metadata };
-    // The token is a string with the encrypted session
     const token = await encryptSession(session);
     setTokenCookie(res, token);
     res.status(200).send({ done: true });

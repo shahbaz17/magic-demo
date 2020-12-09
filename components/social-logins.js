@@ -1,57 +1,60 @@
-import FadeIn from "react-fade-in";
-import { devMode } from "../lib/hooks";
-import ReactTooltip from "react-tooltip";
+import FadeIn from 'react-fade-in';
+import { devMode } from '../lib/hooks';
+import ReactTooltip from 'react-tooltip';
 
 const SocialLogins = ({ onSubmit }) => {
   const devModeEnabled = devMode();
-  const providers = ["google", "facebook", "github"];
+  const providers = ['google', 'facebook', 'github'];
   const loginWithSocialToolTip = (provider) =>
-    `await magic.oauth.loginWithRedirect({ provider: "${provider}",  redirectURI: "your-website.com/callback" });`;
+    `await magic.oauth.loginWithRedirect({ provider: "${provider}",  redirectURI: "https://magic-demo.vercel.app/callback" });`;
 
   return (
     <>
       <FadeIn>
         {providers.map((provider) => {
           return (
-            <>
+            <div key={provider}>
               <button
-                type="submit"
-                className="social-btn"
+                type='submit'
+                className='social-btn'
                 onClick={() => onSubmit(provider)}
                 key={provider}
                 style={{
                   backgroundImage: `url(${provider}.png)`,
-                  backgroundSize: "19px",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "23% 50%",
-                  paddingLeft: "35px",
+                  backgroundSize: '19px',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: '23% 50%',
+                  paddingLeft: '35px',
                 }}
               >
                 {/* turns "google" to "Google" */}
                 {provider.replace(/^\w/, (c) => c.toUpperCase())}
-                {devModeEnabled === "true" && (
-                  <span style={{ textAlign: "left" }}>
+                {devModeEnabled === 'true' && (
+                  <span style={{ textAlign: 'left' }}>
                     <img
-                      height="14px"
+                      height='14px'
                       data-tip
                       data-for={`${provider}-login-btn`}
-                      src="/information.png"
-                      style={{ marginLeft: "10px" }}
+                      src='/information.png'
+                      style={{ marginLeft: '10px' }}
                     />
                     <ReactTooltip
                       id={`${provider}-login-btn`}
-                      type="dark"
-                      effect="solid"
-                      place="bottom"
+                      type='dark'
+                      effect='solid'
+                      place='bottom'
                     >
-                      <div>Action: Log the user in with {provider}</div>
+                      <div>
+                        Log the user in with {provider}, then redirect to{' '}
+                        <span className='mono'>`/callback`</span> where we complete the login.
+                      </div>
                       <br />
-                      <div>{loginWithSocialToolTip(provider)}</div>
+                      <img height='90px' src='/social-login.png' />
                     </ReactTooltip>
                   </span>
                 )}
               </button>
-            </>
+            </div>
           );
         })}
       </FadeIn>
@@ -71,6 +74,9 @@ const SocialLogins = ({ onSubmit }) => {
         }
         .social-btn:hover {
           border: 1px solid #888;
+        }
+        .mono {
+          font-family: monospace !important;
         }
       `}</style>
     </>

@@ -1,34 +1,37 @@
-import Link from "next/link";
-import { useUser, devMode } from "../lib/hooks";
-import ReactTooltip from "react-tooltip";
+import Link from 'next/link';
+import { useUser, devMode } from '../lib/hooks';
+import ReactTooltip from 'react-tooltip';
+import Router, { useRouter } from 'next/router';
 
 const Header = () => {
   const user = useUser();
   const devModeEnabled = devMode();
+  const router = useRouter();
 
   const handleToggle = () => {
-    let currentVal = localStorage.getItem("devMode");
-    localStorage.setItem("devMode", currentVal === "true" ? false : true);
+    localStorage.setItem('devMode', localStorage.getItem('devMode') === 'true' ? false : true);
+    let urlPath = router.pathname;
+    Router.push(urlPath);
   };
 
   return (
     <header>
       <nav>
         <ul>
-          <div data-tip="Toggle this to enable Developer Mode, <br /> which will show you Magic code snippets <br /> that power each action.">
+          <div data-tip='Toggle this to enable Developer Mode, <br /> which will show you Magic code snippets <br /> that power each action.'>
             DEVELOPER
-            <label className="switch">
+            <label className='switch'>
               <input
-                type="checkbox"
-                defaultChecked={devModeEnabled === "true" ? true : false}
+                type='checkbox'
+                defaultChecked={devModeEnabled === 'true' ? true : false}
                 onClick={() => handleToggle()}
               />
-              <span className="slider round"></span>
+              <span className='slider round'></span>
             </label>
           </div>
-          <div className="nav-links-container">
+          <div className='nav-links-container'>
             <li>
-              <Link href="/">
+              <Link href='/'>
                 <a>Home</a>
               </Link>
             </li>
@@ -36,29 +39,38 @@ const Header = () => {
             {user ? (
               <>
                 <li>
-                  <Link href="/profile">
+                  <Link href='/profile'>
                     <a>Profile</a>
                   </Link>
                 </li>
                 <li>
-                  <a href="/api/logout">Logout</a>
-                  {devModeEnabled === "true" && (
+                  <a href='/api/logout'>Logout</a>
+
+                  {devModeEnabled === 'true' && (
                     <>
                       <img
-                        height="14px"
+                        height='14px'
                         data-tip
-                        data-for="logout-btn"
-                        src="/information.png"
-                        style={{ marginLeft: "8px" }}
+                        data-for='logout-btn'
+                        src='/information.png'
+                        style={{ marginLeft: '8px' }}
                       />
-                      <ReactTooltip id="logout-btn" type="dark" effect="solid" place="bottom">
-                        <div>Action: Log user out</div>
+                      <ReactTooltip id='logout-btn' type='dark' effect='solid' place='bottom'>
+                        <div>Logs user out of their session with Magic and this app's server</div>
                         <br />
-                        <div>Client-side:</div>
-                        <div>GET /api/logout</div>
-                        <br />
-                        <div>Server-side:</div>
-                        <div>await magic.users.logoutByIssuer(session.issuer);</div>
+                        <div>Client-side</div>
+                        <img
+                          style={{ marginBottom: '8px' }}
+                          height='30px'
+                          src='/client-logout.png'
+                        />
+                        <div>Server-side</div>
+                        <img
+                          height='100px'
+                          data-tip
+                          data-for='logout-btn'
+                          src='/server-logout.png'
+                        />
                       </ReactTooltip>
                     </>
                   )}
@@ -66,7 +78,7 @@ const Header = () => {
               </>
             ) : (
               <li>
-                <Link href="/login">
+                <Link href='/login'>
                   <a>Login</a>
                 </Link>
               </li>
@@ -74,11 +86,12 @@ const Header = () => {
           </div>
         </ul>
       </nav>
-      <ReactTooltip place="bottom" effect="solid" type="dark" multiline={true} />
+      <ReactTooltip place='bottom' effect='solid' type='dark' multiline={true} />
       <style jsx>{`
         nav {
           max-width: 42rem;
           margin: 0 auto;
+          margin-bottom: 50px;
           padding: 0.2rem 1.25rem;
         }
         ul {
@@ -131,7 +144,7 @@ const Header = () => {
         }
         .slider:before {
           position: absolute;
-          content: "";
+          content: '';
           height: 16px;
           width: 16px;
           left: 4px;

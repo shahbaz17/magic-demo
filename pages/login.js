@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import Router from "next/router";
-import { useUser } from "../lib/hooks";
-import Layout from "../components/layout";
-import Form from "../components/form";
-import SocialLogins from "../components/social-logins";
-import { Magic } from "magic-sdk";
-import { OAuthExtension } from "@magic-ext/oauth";
-import { WebAuthnExtension } from "@magic-ext/webauthn";
+import { useState, useEffect } from 'react';
+import Router from 'next/router';
+import { useUser } from '../lib/hooks';
+import Layout from '../components/layout';
+import Form from '../components/form';
+import SocialLogins from '../components/social-logins';
+import { Magic } from 'magic-sdk';
+import { OAuthExtension } from '@magic-ext/oauth';
+import { WebAuthnExtension } from '@magic-ext/webauthn';
 
 const Login = () => {
-  useUser({ redirectTo: "/", redirectIfFound: true });
+  useUser({ redirectTo: '/', redirectIfFound: true });
   const [magic, setMagic] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     !magic &&
@@ -26,32 +26,31 @@ const Login = () => {
   async function handleLoginWithMagic(e) {
     e.preventDefault();
 
-    if (errorMsg) setErrorMsg("");
-
-    const body = {
-      email: e.currentTarget.email.value,
-    };
+    if (errorMsg) setErrorMsg('');
 
     try {
+      // maybe include something about the promiEvents like 'email-sent' and email-not-deliverable https://docs.magic.link/client-sdk/web/api-reference#promievents
+      /* email magic link to user & specify redirectURI for after link is clicked */
       const didToken = await magic.auth.loginWithMagicLink({
-        email: body.email,
+        email: e.currentTarget.email.value,
         redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/callback`,
       });
-      const res = await fetch("/api/login", {
-        method: "POST",
+      /* validate token with server */
+      const res = await fetch('/api/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + didToken,
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + didToken,
         },
-        // body: JSON.stringify(body),
       });
+      /* redirect home if authentication was successful */
       if (res.status === 200) {
-        Router.push("/");
+        Router.push('/');
       } else {
         throw new Error(await res.text());
       }
     } catch (error) {
-      console.error("An unexpected error happened occurred:", error);
+      console.error('An unexpected error happened occurred:', error);
       setErrorMsg(error.message);
     }
   }
@@ -65,9 +64,9 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="login">
+      <div className='login'>
         <Form errorMessage={errorMsg} onSubmit={handleLoginWithMagic} />
-        <div className="or-login-with">Or login with</div>
+        <div className='or-login-with'>Or login with</div>
         <SocialLogins onSubmit={handleLoginWithSocial} />
       </div>
       <style jsx>{`
@@ -79,6 +78,7 @@ const Login = () => {
           border-radius: 4px;
           text-align: center;
           margin-top: 40px;
+          background-color: #fff;
         }
         .or-login-with {
           margin-top: 25px;
